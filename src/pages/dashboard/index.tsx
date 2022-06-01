@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, TextInput }
 import { FontAwesome } from '@expo/vector-icons'
 import { AuthContext } from '../../contexts/AuthContext'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Alert, { ToastConfigParams } from '../../components/Alert';
+
 
 
 
@@ -14,9 +16,25 @@ export default function Dashboard() {
     async function handleNewTask() {
         if (newTask) {
             setNewTask(false);
+            const toast: ToastConfigParams = {
+                type: 'info',
+                text1: `haha ${newTask}`,
+                position: 'top',
+                isVisible: false
+            }
+
+            Alert({...toast});
             return;
         }
         setNewTask(true);
+        const toast: ToastConfigParams = {
+            type: 'info',
+            text1: `ihul ${newTask}`,
+            position: 'top',
+            isVisible: false
+        }
+
+        Alert({...toast});
     }
 
     return (

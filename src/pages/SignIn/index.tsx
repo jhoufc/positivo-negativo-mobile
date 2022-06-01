@@ -3,8 +3,12 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ActivityInd
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import {AuthContext} from '../../contexts/AuthContext';
+import {useNavigation} from '@react-navigation/native';
+import { NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {StackPramsList} from '../../routes/auth.routes'
 
 export default function SignIn() {
+    const navigation = useNavigation<NativeStackNavigationProp<StackPramsList>>();
     const { signIn, loadingAuth } = useContext(AuthContext);
     const [usuario, setUser] = useState('');
     const [password, setPassword] = useState('');
@@ -14,6 +18,13 @@ export default function SignIn() {
         if(usuario === '' || password === '') return;
 
         await signIn({usuario, password})
+    }
+
+    async function handleSignUp(){
+        navigation.navigate('SignUp');
+    }
+    async function handleForgot(){
+        navigation.navigate('Forgot');
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -37,6 +48,11 @@ export default function SignIn() {
                     onChangeText={setPassword}
                     >
                 </TextInput>
+                <View style={styles.forgot}>
+                    <TouchableOpacity style={styles.forgotLink} onPress={handleForgot}>
+                        <Text style={styles.infoText}>Esqueceu sua senha ?</Text>
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     {loadingAuth ? (
                     <ActivityIndicator size={32} color={'#DEDEDE'}/>
@@ -45,6 +61,10 @@ export default function SignIn() {
                         <Text style={styles.textButton}>Entrar</Text>
                     )}
                 </TouchableOpacity>
+                <View style={styles.infoContainer}>
+                    <Text>Não possui cadastro ? </Text>
+                    <TouchableOpacity onPress={handleSignUp}><Text style={styles.infoText}>Cadastre-se</Text></TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -52,7 +72,7 @@ export default function SignIn() {
 
 
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -76,6 +96,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         borderRadius: 4,
         paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#ccc'
 
     },
     button: {
@@ -91,5 +113,28 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
 
-    }
+    },
+    infoContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        padding: 10,
+        justifyContent: 'center'
+    },
+    infoText: {
+        color: '#0745e3'
+    },
+    forgot: {
+        width: '95%',
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 12,
+        flexDirection: 'row',
+        padding: 2
+    },
+    forgotLink: {
+        width: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+    }    
 })

@@ -1,9 +1,14 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Dashboard from '../pages/dashboard';
+import Dashboard from '../pages/Dashboard';
 
-const Stack = createNativeStackNavigator();
+export type StackPramsList = {
+    Dashboard: undefined;
+}
+
+
+const Stack = createNativeStackNavigator<StackPramsList>();
 
 function AppRoutes(){
     return(
