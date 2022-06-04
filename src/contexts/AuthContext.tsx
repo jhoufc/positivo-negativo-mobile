@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackPramsList } from '../routes/auth.routes';
 
 import { api } from '../services/api'
+import AuthBaselineNav from '../components/AuthBasilaneNav';
 
 
 type UserBdInfo = {
@@ -50,7 +51,7 @@ type SignUpProps = {
     password: string;
 }
 
-type VerifyProps ={
+type VerifyProps = {
     user: string;
 }
 export const AuthContext = createContext({} as AuthContextData);
@@ -67,13 +68,12 @@ export function AuthProvider({ children }: AuthProvider) {
     });
     const [exists, setExists] = useState(false);
 
-    async function asyncSetExists(exist: boolean)
-    {
+    async function asyncSetExists(exist: boolean) {
         setExists(exist);
     }
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        
+
         async function getUser() {
 
             //const userInfo = null;
@@ -133,7 +133,7 @@ export function AuthProvider({ children }: AuthProvider) {
             Alert(toast);
 
 
-            
+
         }
         catch (err) {
             console.log('erro ao acessar', err);
@@ -154,7 +154,7 @@ export function AuthProvider({ children }: AuthProvider) {
                     type: 'info',
                     text1: `Até logo`
                 }
-    
+
                 Alert(toast);
             })
     }
@@ -164,37 +164,37 @@ export function AuthProvider({ children }: AuthProvider) {
 
         try {
             await api.post('/create-user', { name, user, password })
-            .then((res) => {
-                Alert({type: 'success', text1: `Usuário ${res.data.user.user} cadastrado com sucesso`});                
-                navigation.navigate('SignIn');
+                .then((res) => {
+                    Alert({ type: 'success', text1: `Usuário ${res.data.user.user} cadastrado com sucesso` });
+                    navigation.navigate('SignIn');
 
-            })
+                })
             setLoadingAuth(false)
 
         } catch (err) {
-            Alert({type: 'error', text1: 'Algo deu errado', text2: err})
+            Alert({ type: 'error', text1: 'Algo deu errado', text2: err })
             setLoadingAuth(false)
         }
     }
 
-    async function verify({user}: VerifyProps){
+    async function verify({ user }: VerifyProps) {
         setLoadingAuth(true)
-        try{
+        try {
             const response = await api.get(`/verify?user=${user}`)
-            .then((res)=> {
-                console.log(res.data.exists);
-                setExists(res.data.exists);
-                console.log(`existis no then ${exists}`);
-                if(res.data.exists)
-                    Alert({type: 'error', text1: 'Usuário indisponível'});                
-                else
-                    Alert({type: 'success', text1: 'Usuário disponível para cadastro'});                
+                .then((res) => {
+                    console.log(res.data.exists);
+                    setExists(res.data.exists);
+                    console.log(`existis no then ${exists}`);
+                    if (res.data.exists)
+                        Alert({ type: 'error', text1: 'Usuário indisponível' });
+                    else
+                        Alert({ type: 'success', text1: 'Usuário disponível para cadastro' });
 
-            });          
+                });
 
             setLoadingAuth(false);
 
-        }catch(err){
+        } catch (err) {
             setLoadingAuth(false);
             console.log(err)
         }
@@ -203,6 +203,7 @@ export function AuthProvider({ children }: AuthProvider) {
     return (
         <AuthContext.Provider value={{ user, isAuthenticated, signIn, loading, loadingAuth, signOut, signUp, verify, exists }}>
             {children}
+
         </AuthContext.Provider>
     );
 }

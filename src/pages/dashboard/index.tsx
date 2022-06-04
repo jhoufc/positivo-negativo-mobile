@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, TextInput } from 'react-native';
+import React, { useState, useContext, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, TextInput, Animated } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'
 import { AuthContext } from '../../contexts/AuthContext'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Alert, { ToastConfigParams } from '../../components/Alert';
-
+import AuthBaselineNav from '../../components/AuthBasilaneNav';
 
 
 
@@ -12,29 +11,37 @@ export default function Dashboard() {
     const [task, setTask] = useState({})
     const { signOut, user } = useContext(AuthContext);
     const [newTask, setNewTask] = useState(false);
+    const altura = useRef(new Animated.Value(0)).current;
+    const [list, setList] = useState([
+        { key: 1, value: 'Just a Task' },
+        { key: 2, value: 'Just a Task' },
+        { key: 3, value: 'Just a Task' },
+        { key: 4, value: 'Just a Task' },
+        { key: 5, value: 'Just a Task' },
+        { key: 6, value: 'Just a Task' },
+        { key: 7, value: 'Just a Task' },
+        { key: 8, value: 'Just a Task' },
+        { key: 9, value: 'Just a Task' }
+    ])
 
     async function handleNewTask() {
+        let date = Date.now();
+        alert(date)
         if (newTask) {
             setNewTask(false);
-            const toast: ToastConfigParams = {
-                type: 'info',
-                text1: `haha ${newTask}`,
-                position: 'top',
-                isVisible: false
-            }
-
-            Alert({...toast});
+            Animated.timing(altura, {
+                toValue: 0,
+                useNativeDriver: false
+            }).start();
             return;
         }
         setNewTask(true);
-        const toast: ToastConfigParams = {
-            type: 'info',
-            text1: `ihul ${newTask}`,
-            position: 'top',
-            isVisible: false
-        }
 
-        Alert({...toast});
+        Animated.timing(altura, {
+            toValue: 150,
+            useNativeDriver: false
+        }).start();
+
     }
 
     return (
@@ -66,17 +73,62 @@ export default function Dashboard() {
             </View>
 
 
-            <View style={styles.teste}>
-                {newTask ? (
-                    <View style={styles.newTask}>
-                        <TextInput placeholder='Nome da Tarefa'>
-                            
-                        </TextInput>
-                    </View>
-                ) : (<></>)}
 
-            </View>
-            <View style={styles.taskContainer}>
+
+
+            {/* {newTask ? (<Animated.View>
+                <Animated.View style={{
+                    height: altura,
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}>
+                    <TextInput
+                        placeholder='Nome da Tarefa'
+                        placeholderTextColor={'#888'}
+                        style={styles.input}></TextInput>
+                </Animated.View>
+            </Animated.View>) : (<></>)} */}
+
+
+            <Animated.View>
+                <Animated.View style={{
+                    height: altura,
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}>
+                    <TextInput
+                        placeholder='Nome da Tarefa'
+                        placeholderTextColor={'#888'}
+                        style={styles.input}></TextInput>
+                </Animated.View>
+            </Animated.View>
+
+
+
+
+            <FlatList style={{}}
+                data={list}
+                keyExtractor={(item) => item.key}
+                renderItem={({ item }) =>
+                    <View style={styles.taskContainer}>
+                        <Text>{item.value}</Text>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.buttonNegative}>
+                                <FontAwesome name='calendar-times-o' style={styles.negative} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonPositive}>
+                                <FontAwesome name='calendar-check-o' style={styles.positive} />
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>}
+            >
+
+            </FlatList>
+
+            <AuthBaselineNav />
+
+            {/* <View style={styles.taskContainer}>
                 <Text>Task One</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.buttonNegative}>
@@ -87,111 +139,9 @@ export default function Dashboard() {
                     </TouchableOpacity>
 
                 </View>
-            </View>
+            </View> */}
 
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
 
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-
-            <View style={styles.taskContainer}>
-                <Text>Task One</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttonNegative}>
-                        <FontAwesome name='thumbs-down' style={styles.negative} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonPositive}>
-                        <FontAwesome name='thumbs-up' style={styles.positive} />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
         </SafeAreaView>
     );
 }
@@ -203,6 +153,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         width: '100%',
+    },
+    input: {
+        width: '95%',
+        height: 40,
+        backgroundColor: '#e6e6e6',
+        marginBottom: 15,
+        borderRadius: 4,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        marginTop: 10
     },
     header: {
         width: '100%',
@@ -249,12 +210,13 @@ const styles = StyleSheet.create({
     taskContainer: {
         height: 60,
         width: '100%',
-        backgroundColor: '#b5b5b5',
+        backgroundColor: '#68d0ed',
         paddingLeft: 8,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-        marginBottom: 8
+        marginBottom: 8,
+        marginTop: 8
         // left: '50%'
     },
     calendar: {
@@ -264,7 +226,7 @@ const styles = StyleSheet.create({
     },
     profileAvatar: {
         fontSize: 61,
-        color: '#999',
+        color: '#FFF',
         opacity: 0.6
     },
     buttonContainer: {
@@ -290,18 +252,17 @@ const styles = StyleSheet.create({
     },
     positive: {
         fontSize: 28,
-        color: '#b5b5b5'
+        color: '#333'
     },
     negative: {
         fontSize: 28,
-        color: '#b5b5b5'
+        color: '#333'
 
     },
     titleContainer: {
         height: 50,
         width: '100%',
         backgroundColor: '#264475',
-        marginBottom: 8,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -309,7 +270,7 @@ const styles = StyleSheet.create({
 
     },
     title: {
-        color: '#d5d5d5',
+        color: '#fff',
         fontSize: 22,
         fontWeight: 'bold'
     },
@@ -322,7 +283,7 @@ const styles = StyleSheet.create({
     subtitle: {
         marginRight: 8,
         fontSize: 18,
-        color: '#d5d5d5'
+        color: '#fff'
     },
     squareButton: {
         width: 50,
@@ -334,13 +295,6 @@ const styles = StyleSheet.create({
     square: {
         fontSize: 44,
         color: '#1ac914'
-    },
-    newTask: {
-        height: 540,
-        transitionDelay: '2000ms',
-        transitionDuration: '2000ms',
-        transitionProperty: 'height',
-        transitionTimingFunction: 'linear'
     }
 
 })

@@ -10,8 +10,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 function Routes(){
     const { isAuthenticated, loading } = useContext(AuthContext);
     
-
-    if(loading){
+    // const force = true;
+    // if(force){
+   if(loading){
         return(
             <SafeAreaView
                 style={{
